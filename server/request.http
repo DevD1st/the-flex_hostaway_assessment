@@ -1,0 +1,16 @@
+### Fetch listings
+GET http://localhost:3000/listings
+
+### Fetch 1 listings
+GET http://localhost:3000/listings/101
+
+### Fetch reviews
+GET http://localhost:3000/reviews?limit=5&from=2024-10-20T14:30:00.000Z&to=2024-10-21T14:30:00.000Z
+# Authorization: Bearer admin
+
+### Fetch 1 review
+GET http://localhost:3000/reviews/1040
+
+### Change review status
+PATCH http://localhost:3000/reviews/1040?status=published
+Authorization: Bearer admin
