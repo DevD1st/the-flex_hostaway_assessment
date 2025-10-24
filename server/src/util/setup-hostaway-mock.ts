@@ -231,10 +231,10 @@ function fetchMockedReviews(url: string, isAdmin: boolean = false) {
 function patchMockedReviewStatus(url: string, isAdmin: boolean) {
   if (!isAdmin) return; // shouldn't get here, router would have handled it
 
-  const statusParam = new URL(url).searchParams.get("status");
+  let statusParam = new URL(url).searchParams.get("status");
   const reviewId = getUrlId(url, HOSTAWAY_REVIEWS_URL);
 
-  if (!reviewId || !statusParam) {
+  if (!reviewId) {
     return new HostawayResponseDto({
       result: undefined,
       count: 0,
@@ -244,7 +244,16 @@ function patchMockedReviewStatus(url: string, isAdmin: boolean) {
   }
   // Find and update review
   const reviewIndex = MOCKED_REVIEWS.findIndex((r) => r.id === reviewId);
-  if (!reviewIndex || reviewIndex < 0) {
+
+  // if there is no status, perform a toggle
+  if (!statusParam) {
+    statusParam =
+      MOCKED_REVIEWS[reviewIndex].status === HostawayReviewStatus.Awaiting
+        ? HostawayReviewStatus.Published
+        : HostawayReviewStatus.Awaiting;
+  }
+
+  if (reviewIndex < 0) {
     return new HostawayResponseDto({
       result: undefined,
       count: 0,

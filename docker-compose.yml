@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  # Backend API server
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: listings-server
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - listings-network
+
+  # Manager frontend
+  manager:
+    build:
+      context: ./manager
+      dockerfile: Dockerfile
+    container_name: listings-manager
+    ports:
+      - "8887:80"
+    depends_on:
+      - server
+    networks:
+      - listings-network
+
+  # Customer frontend
+  customer:
+    build:
+      context: ./customer
+      dockerfile: Dockerfile
+    container_name: listings-customer
+    ports:
+      - "8888:80"
+    depends_on:
+      - server
+    networks:
+      - listings-network
+
+networks:
+  listings-network:
+    driver: bridge

@@ -572,7 +572,7 @@ import {
       const listing = data.data.result;
 
       // Update page
-      document.title = `${listing.name} — Manager`;
+      document.title = `${listing.name} — Customer`;
       renderImages(listing.listingImages);
       initializePhotoGallery(listing);
       renderListingDetails(listing);
