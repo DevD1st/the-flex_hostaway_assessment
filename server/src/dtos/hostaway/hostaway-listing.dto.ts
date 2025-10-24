@@ -54,17 +54,17 @@ export class HostawayListingDto {
   checkInTimeEnd?: number;
 
   @Type(() => Number)
-  checkOutTimeStart!: 11;
+  checkOutTimeStart!: number;
 
   pets!: HostawayListingAllowable;
 
   smokingInside!: HostawayListingAllowable;
 
   @Type(() => Number)
-  bathroomsNumber!: 1;
+  bathroomsNumber!: number;
 
   @Type(() => Number)
-  bedroomsNumber!: 1;
+  bedroomsNumber!: number;
 
   cancellationPolicy!: string;
 
