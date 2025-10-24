@@ -4,8 +4,11 @@ import express, { NextFunction, Request, Response } from "express";
 import ListingsRouter from "./routers/listings.router";
 import ReviewsRouter from "./routers/reviews.router";
 import { ResponseDto } from "./dtos/response/response.dto";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.urlencoded());
 
