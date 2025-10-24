@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
   IsDate,
   IsEnum,
@@ -12,6 +12,10 @@ import {
   HostawayReviewChannel,
   HostawayReviewType,
 } from "../hostaway/hostaway-review.dto";
+import {
+  transformStringToIntArray,
+  transformStringToStringArray,
+} from "../../util/func";
 
 export enum SortBy {
   Rating = "Rating",
@@ -40,6 +44,7 @@ export class ReviewsQueryDto {
   @IsOptional()
   type?: HostawayReviewType;
 
+  @Transform(transformStringToIntArray)
   @IsEnum(HostawayReviewChannel, {
     message: "Please provide a valid review channel(s).",
     each: true,
@@ -67,6 +72,7 @@ export class ReviewsQueryDto {
   @IsOptional()
   minRating?: number;
 
+  @Transform(transformStringToStringArray)
   @IsEnum(HostawayReviewCategory, {
     message: "Please provide valid review categorie(s).",
     each: true,

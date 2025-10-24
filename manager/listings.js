@@ -45,7 +45,7 @@
 
     return `
       <li class="board">
-        <a class="board__link" href="/listings?id=${listing.id}">
+        <a class="board__link" href="/manager/listings/?id=${listing.id}">
           <div>
             <ul class="board__top">
               <li class="board__images">
