@@ -1,0 +1,40 @@
+name: PermTest
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - server/**/*
+    push:
+        branches:
+            - main
+        paths:
+            - server/**/*
+    workflow_dispatch:
+
+jobs:
+    test:
+        strategy:
+            matrix:
+                node_version: [20.x]
+
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: server
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: install_node ${{ matrix.node_version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node_version }}
+
+            - name: install dependencies
+              run: npm i
+
+            - name: test
+              run: npm run test:ci
