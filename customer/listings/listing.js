@@ -1,7 +1,6 @@
 import {
   API_BASE_URL,
   showError,
-  showToast,
   toggleLoading,
   convertTo12Hour,
   getStarRating,
@@ -344,8 +343,6 @@ import {
     const reviewsList = document.createElement("div");
     reviewsList.id = "reviewsList";
     reviewsList.className = "reviews-list";
-    // keep track of last used params so we can refresh after actions
-    let lastParams = null;
 
     // Insert filter form and reviews container after the reviews title container
     reviewsContainer.insertAdjacentElement("afterend", filterForm);
@@ -357,12 +354,7 @@ import {
       reviewsList.innerHTML = `<div class="reviews-loading"><div class="loading-spinner"></div></div>`;
 
       try {
-        const url = `${API_BASE_URL}/reviews?${params}`;
-        const response = await fetch(url, {
-          headers: {
-            Authorization: "Bearer admin",
-          },
-        });
+        const response = await fetch(`${API_BASE_URL}/reviews?${params}`);
         const data = await response.json();
 
         if (data.name !== "Success") {
@@ -373,10 +365,6 @@ import {
         const fetched = Array.isArray(data.data && data.data.result)
           ? data.data.result
           : [];
-
-        // Render performance summary based on fetched reviews (all reviews)
-        renderPerformance(fetched);
-
         const filtered = fetched.filter(
           (r) => r && r.publicReview && String(r.publicReview).trim() !== ""
         );
@@ -388,72 +376,6 @@ import {
         showError(error.message || "Failed to load reviews");
       }
     }
-
-    // Render performance summary in the right column based on reviewCategory ratings
-    function renderPerformance(allReviews) {
-      const rightCtn = document.querySelector(".bottom__right-ctn--2");
-      if (!rightCtn) return;
-
-      const categories = [
-        { key: "cleanliness", label: "Cleanliness" },
-        { key: "communication", label: "Communication" },
-        { key: "respect_house_rules", label: "Respect House Rules" },
-      ];
-
-      const stats = categories.map((c) => {
-        let sum = 0;
-        let count = 0;
-        allReviews.forEach((r) => {
-          if (!r || !Array.isArray(r.reviewCategory)) return;
-          r.reviewCategory.forEach((rc) => {
-            if (!rc) return;
-            if (
-              rc.category === c.key ||
-              String(rc.category).toLowerCase() === c.key
-            ) {
-              const n = Number(rc.rating || rc.score || 0);
-              if (!Number.isNaN(n)) {
-                sum += n;
-                count += 1;
-              }
-            }
-          });
-        });
-
-        const avg10 = count > 0 ? sum / count : 0; // ratings are on 0-10 scale
-        const avg5 = +(avg10 / 2).toFixed(2);
-        return { key: c.key, label: c.label, avg5, count };
-      });
-
-      // Build HTML
-      rightCtn.innerHTML = `
-        <div class="performance-ctn">
-          <h3 class="performance-title">Listing performance</h3>
-          <div class="performance-list">
-            ${stats
-              .map(
-                (s) => `
-              <div class="perf-item">
-                <div class="perf-item__label">${s.label}</div>
-                <div class="perf-item__value">${s.avg5} / 5</div>
-                <div class="perf-item__count">based on ${s.count} review${
-                  s.count === 1 ? "" : "s"
-                }</div>
-                <div class="perf-item__bar"><div class="perf-item__bar-fill" style="width: ${Math.round(
-                  (s.avg5 / 5) * 100
-                )}%"></div></div>
-              </div>
-            `
-              )
-              .join("")}
-          </div>
-        </div>
-      `;
-    }
-    // listen for external review change events and refresh
-    document.addEventListener("reviews:changed", () => {
-      if (lastParams) fetchAndRenderReviews(lastParams);
-    });
 
     // Setup dropdown-multi behaviour and active filters badge
     function setupDropdownsAndBadge() {
@@ -572,7 +494,6 @@ import {
         checked.forEach((v) => params.append("categories", v));
       }
 
-      lastParams = params;
       fetchAndRenderReviews(params);
     });
 
@@ -580,7 +501,6 @@ import {
     const defaultParams = new URLSearchParams();
     defaultParams.append("listingId", listingId);
     defaultParams.append("limit", "10");
-    lastParams = defaultParams;
     fetchAndRenderReviews(defaultParams);
   }
 
@@ -604,14 +524,8 @@ import {
         const author = review.guestName || review.guest || "Guest";
         const text = review.publicReview || review.message || "";
 
-        // decide action label based on status
-        const actionLabel =
-          review.status === "published" ? "Unpublish" : "Publish";
-        const actionTargetStatus =
-          review.status === "published" ? "awaiting" : "published";
-
         return `
-        <div class="bottom__review-ctn" data-review-id="${review.id}">
+        <div class="bottom__review-ctn">
           <div class="bottom__review-title-ctn">
             <span class="bottom__rating-count">${rating}</span>
             <span class="bottom__ratings-dot">·</span>
@@ -623,90 +537,12 @@ import {
               )}</span>
               <span class="bottom__review-title-year">${date.getFullYear()}</span>
             </span>
-            <button type="button" class="review-action ${
-              actionTargetStatus === "published" ? "publish" : "unpublish"
-            }" data-review-id="${
-          review.id
-        }" data-action-status="${actionTargetStatus}">${actionLabel}</button>
           </div>
           <div class="bottom-review">${text}</div>
         </div>
       `;
       })
       .join("");
-
-    // Use event delegation for publish/unpublish actions (reliable even after re-renders)
-    reviewsList.addEventListener("click", (ev) => {
-      const btn = ev.target.closest && ev.target.closest(".review-action");
-      if (!btn) return;
-      ev.preventDefault();
-      const reviewId = btn.getAttribute("data-review-id");
-      const newStatus = btn.getAttribute("data-action-status");
-      console.debug("review action (delegated) clicked", {
-        reviewId,
-        newStatus,
-      });
-      if (!reviewId || !newStatus) return;
-      // optimistic UI: disable button while request runs
-      btn.disabled = true;
-      const originalLabel = btn.textContent;
-      btn.textContent =
-        newStatus === "published" ? "Publishing..." : "Unpublishing...";
-      patchReviewStatus(reviewId, newStatus)
-        .catch(() => {
-          // on error, restore label (patchReviewStatus shows error toast)
-          btn.textContent = originalLabel;
-        })
-        .finally(() => {
-          btn.disabled = false;
-        });
-    });
-  }
-
-  // Helper to change review status (publish/unpublish) - top-level so delegated handlers can call it
-  async function patchReviewStatus(reviewId, newStatus) {
-    const url = `${API_BASE_URL}/reviews/${reviewId}?status=${encodeURIComponent(
-      newStatus
-    )}`;
-    try {
-      console.debug("patchReviewStatus: sending PATCH", { url, newStatus });
-      toggleLoading(true);
-      const res = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          Authorization: "Bearer admin",
-        },
-      });
-
-      let body = null;
-      try {
-        body = await res.json();
-      } catch (e) {
-        body = null;
-      }
-
-      if (!res.ok || (body && body.name !== "Success")) {
-        const msg = (body && body.message) || `Server returned ${res.status}`;
-        throw new Error(msg);
-      }
-
-      showToast(
-        `Review ${
-          newStatus === "published" ? "published" : "unpublished"
-        } successfully`
-      );
-
-      // Notify anyone interested (initializeReviews will refresh the list)
-      document.dispatchEvent(
-        new CustomEvent("reviews:changed", { detail: { reviewId, newStatus } })
-      );
-    } catch (err) {
-      console.error("Error patching review status:", err);
-      showError(err.message || "Failed to update review status");
-      throw err;
-    } finally {
-      toggleLoading(false);
-    }
   }
 
   /**
@@ -726,11 +562,7 @@ import {
       toggleLoading(true);
 
       // Fetch listing details
-      const response = await fetch(`${API_BASE_URL}/listings/${listingId}`, {
-        headers: {
-          Authorization: "Bearer admin",
-        },
-      });
+      const response = await fetch(`${API_BASE_URL}/listings/${listingId}`);
       const data = await response.json();
 
       if (data.name !== "Success") {

@@ -104,11 +104,7 @@
     try {
       toggleLoading(true);
 
-      const response = await fetch(`${API_BASE_URL}/listings`, {
-        headers: {
-          Authorization: "Bearer admin",
-        },
-      });
+      const response = await fetch(`${API_BASE_URL}/listings`);
       const data = await response.json();
 
       if (data.name !== "Success") {

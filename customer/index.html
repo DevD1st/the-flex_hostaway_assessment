@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Listing App &mdash; Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&amp;family=Noto+Sans:wght@400;600;700&amp;display=swap"
+    />
+    <link
+      rel="icon"
+      href="https://bookingenginecdn.hostaway.com/account/attachment/23248-XKTisBFakOwIJy58HzE73qUZx4oDcaBHxvFnnIGrgD0-65d7c789c321a?width=32&height=32&quality=70&format=png&v=2"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="extensions.css" />
+  </head>
+
+  <body>
+    <section>
+      <h1 class="title">Your Listings</h1>
+
+      <ul class="main-board">
+        <!-- Dynamic content will be inserted here by JavaScript -->
+
+        <!-- template -->
+        <li class="board" style="display: none">
+          <a class="board__link" href="/manager/listings/70985">
+            <div>
+              <ul class="board__top">
+                <li class="board__images">
+                  <img
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    data-nimg="fill"
+                    class="board__image"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    srcset="
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=256&amp;quality=70&amp;format=webp&amp;v=2   256w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=384&amp;quality=70&amp;format=webp&amp;v=2   384w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=640&amp;quality=70&amp;format=webp&amp;v=2   640w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=750&amp;quality=70&amp;format=webp&amp;v=2   750w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=828&amp;quality=70&amp;format=webp&amp;v=2   828w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=1080&amp;quality=70&amp;format=webp&amp;v=2 1080w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=1200&amp;quality=70&amp;format=webp&amp;v=2 1200w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=1920&amp;quality=70&amp;format=webp&amp;v=2 1920w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=2048&amp;quality=70&amp;format=webp&amp;v=2 2048w,
+                      https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=3840&amp;quality=70&amp;format=webp&amp;v=2 3840w
+                    "
+                    src="https://bookingenginecdn.hostaway.com/listing/23248-70985-CplDgs6BeWDAvLRBM2gvtuPNW7j0IyNmbysqbBWCoZo-68e3d96d20af2?width=3840&amp;quality=70&amp;format=webp&amp;v=2"
+                    style="
+                      position: absolute;
+                      height: 100%;
+                      width: 100%;
+                      inset: 0px;
+                      color: transparent;
+                    "
+                  />
+                  <div class="board__top-info">
+                    <div class="board__top-info--listing">
+                      <span color="#CC1F1F">All listings</span>
+                    </div>
+                    <div class="board__top-info--rating">4.85</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="board__bottom">
+              <h4 class="bottom-header">
+                Spacious 2 Bed Flat in Hoxton - The Flex London
+              </h4>
+
+              <ul class="bottom-bed-et-el">
+                <li class="bottom-bed-et-el--item">5 guests</li>
+                <li class="bottom-bed-et-el--item">2 bedrooms</li>
+                <li class="bottom-bed-et-el--item">2 baths</li>
+              </ul>
+
+              <ul class="bottom-amenities">
+                <li class="bottom-amenity">Free WiFi</li>
+                <li class="bottom-amenity">Internet</li>
+                <li class="bottom-amenity">Private living room</li>
+              </ul>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </section>
+    <script src="listings.js"></script>
+  </body>
+</html>

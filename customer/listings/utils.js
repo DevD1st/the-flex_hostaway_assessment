@@ -16,21 +16,6 @@ function showError(message) {
 }
 
 /**
- * Show success toast
- */
-function showToast(message) {
-  const popup = document.createElement("div");
-  popup.className = "toast-popup";
-  popup.textContent = message;
-  document.body.appendChild(popup);
-
-  setTimeout(() => {
-    popup.classList.add("hide");
-    setTimeout(() => popup.remove(), 300);
-  }, 2500);
-}
-
-/**
  * Toggle loading overlay
  */
 function toggleLoading(show) {
@@ -64,7 +49,6 @@ function getStarRating(rating) {
 export {
   API_BASE_URL,
   showError,
-  showToast,
   toggleLoading,
   convertTo12Hour,
   getStarRating,
