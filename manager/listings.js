@@ -1,6 +1,6 @@
 (() => {
   // Configuration
-  const API_BASE_URL = "http://localhost:3000";
+  const API_BASE_URL = "https://the-flex-yusuf-hostaway-backend.onrender.com";
 
   // Helper Functions
   function convertTo12Hour(hour) {

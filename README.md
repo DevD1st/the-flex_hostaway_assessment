@@ -34,6 +34,12 @@ This project contains a backend API server and two frontend applications (manage
    - **Manager Interface**: http://localhost:8887
    - **Customer Interface**: http://localhost:8888
 
+Please note:
+
+- Backend live API: https://the-flex-yusuf-hostaway-backend.onrender.com
+- Frontend (Manager) live API: https://the-flex-hostaway-assessment.onrender.com
+- Frontend (Customer) live API: https://the-flex-yusuf-hostaway-customer.onrender.com
+
 ### Building Images
 
 To build the Docker images with your Docker Hub username:
